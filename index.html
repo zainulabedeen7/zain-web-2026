@@ -392,6 +392,195 @@
             }
         };
     </script>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Drawing Canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Toolbar Styles */
+        .toolbar {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tool-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="color"] {
+            border: none;
+            width: 40px;
+            height: 35px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        input[type="range"] {
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #e84118;
+        }
+
+        /* Canvas Styles */
+        canvas {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>🎨 Interactive Drawing Canvas</h2>
+
+    <!-- Toolbar controls -->
+    <div class="toolbar">
+        <div class="tool-group">
+            <label for="colorPicker">Color:</label>
+            <input type="color" id="colorPicker" value="#000000">
+        </div>
+        
+        <div class="tool-group">
+            <label for="brushSize">Brush Size:</label>
+            <input type="range" id="brushSize" min="1" max="20" value="5">
+            <span id="sizeDisplay">5px</span>
+        </div>
+
+        <button id="clearBtn">Clear Canvas</button>
+    </div>
+
+    <!-- Drawing Board Container -->
+    <canvas id="paintCanvas" width="800" height="500"></canvas>
+
+    <script>
+        const canvas = document.getElementById('paintCanvas');
+        const ctx = canvas.getContext('2d');
+        const colorPicker = document.getElementById('colorPicker');
+        const brushSize = document.getElementById('brushSize');
+        const sizeDisplay = document.getElementById('sizeDisplay');
+        const clearBtn = document.getElementById('clearBtn');
+
+        let isDrawing = false;
+
+        // Canvas line settings
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // Start drawing
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e); // User click karte hi dot lag jaye
+        }
+
+        // Stop drawing
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath(); // Line break karne ke liye taqe naya stroke shuru ho
+        }
+
+        // Core drawing function
+        function draw(e) {
+            if (!isDrawing) return;
+
+            // Brush color aur size set karna
+            ctx.strokeStyle = colorPicker.value;
+            ctx.lineWidth = brushSize.value;
+
+            // Canvas par sahi mouse position coordinates nikalna
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        // Brush size input text update karne ke liye
+        brushSize.addEventListener('input', () => {
+            sizeDisplay.textContent = `${brushSize.value}px`;
+        });
+
+        // Clear Canvas functionality
+        clearBtn.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        // Mouse Events
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        // Mobile / Touch Devices Support
+        canvas.addEventListener('touchstart', (e) => {
+            startDrawing(e.touches[0]);
+        });
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Screen scroll hone se rokne ke liye
+            draw(e.touches[0]);
+        });
+        canvas.addEventListener('touchend', stopDrawing);
+    </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
