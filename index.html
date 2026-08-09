@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zain's Full Portfolio Tool</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://jsdelivr.net">
+    
+    <!-- CSS Section (Design) -->
+    <style>
+        body {
+            background-color: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 50px 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .card, .form-box, .calc-box, .clock-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            box-sizing: border-box;
+        }
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #00a8ff;
+            margin-bottom: 15px;
+        }
+        h1 { color: #2f3640; font-size: 32px; margin: 5px 0; }
+        p { color: #718093; font-size: 18px; }
+        
+        /* Instagram Style */
+        .social-icons { margin-top: 20px; }
+        .social-icons a { color: #718093; font-size: 40px; text-decoration: none; display: inline-block; transition: 0.3s; }
+        .social-icons a:hover { color: #e1306c; transform: scale(1.15); }
+
+        /* ⏱️ Clock Styling */
+        .clock-box h2 { color: #2f3640; margin-top: 0; }
+        .clock-display {
+            font-size: 36px;
+            font-weight: bold;
+            color: #00a8ff;
+            background-color: #f1f2f6;
+            padding: 15px;
+            border-radius: 10px;
+            letter-spacing: 2px;
+            display: inline-block;
+            min-width: 200px;
+        }
+
+        /* 🧮 Calculator Styling */
+        .calc-box h2 { color: #2f3640; margin-top: 0; }
+        .calc-screen {
+            width: 100%;
+            height: 50px;
+            background-color: #2f3640;
+            color: white;
+            text-align: right;
+            padding: 10px;
+            font-size: 24px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .calc-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-btn { padding: 15px; font-size: 18px; font-weight: bold; background-color: #f1f2f6; border: none; border-radius: 5px; cursor: pointer; transition: 0.2s; }
+        .calc-btn:hover { background-color: #dcdde1; }
+        .calc-btn.operator { background-color: #ff9f43; color: white; }
+        .calc-btn.operator:hover { background-color: #ee5253; }
+        .calc-btn.clear { background-color: #74b9ff; color: white; }
+        .calc-btn.clear:hover { background-color: #0984e3; }
+
+        /* Form Styling */
+        .form-box { text-align: left; }
+        .form-box h2 { text-align: center; color: #2f3640; margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #353b48; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #dcdde1; border-radius: 5px; font-size: 16px; box-sizing: border-box; }
+        .form-control:focus { border-color: #00a8ff; outline: none; }
+        .submit-btn { background-color: #00a8ff; color: white; padding: 12px 20px; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; }
+        .submit-btn:hover { background-color: #0097e6; }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            body { padding: 20px 10px; }
+            .card, .form-box, .calc-box, .clock-box { padding: 20px; }
+            h1 { font-size: 24px; }
+            p { font-size: 15px; }
+            .profile-pic { width: 120px; height: 120px; }
+            .submit-btn { font-size: 16px; }
+            .calc-btn { padding: 10px; font-size: 16px; }
+            .clock-display { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Profile Card -->
+        <div class="card">
+            <img src="my-photo.png" alt="my my-photo.png" class="profile-pic">
+            <h1>Mera Dell Gen 11 PC</h1>
+            <p>Main ne apni website me ek Live Digital Clock bhi add kar li hai!</p>
+            
+            <!-- Instagram Link -->
+            <div class="social-icons">
+                <a href="https://instagram.com" target="_blank" title="Follow Me on Instagram">
+                    <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- ⏱️ Live Digital Clock Section -->
+        <div class="clock-box">
+            <h2>Live Digital Clock</h2>
+            <div id="clock" class="clock-display">00:00:00 PM</div>
+        </div>
+
+        <!-- 🧮 Calculator Box Section -->
+        <div class="calc-box">
+            <h2>Zain's Magic Calculator</h2>
+            <input type="text" id="display" class="calc-screen" readonly placeholder="0">
+            <div class="calc-buttons">
+                <button class="calc-btn clear" onclick="clearScreen()">C</button>
+                <button class="calc-btn operator" onclick="pressKey('/')">/</button>
+                <button class="calc-btn operator" onclick="pressKey('*')">*</button>
+                <button class="calc-btn operator" onclick="pressKey('-')">-</button>
+                <button class="calc-btn" onclick="pressKey('7')">7</button>
+                <button class="calc-btn" onclick="pressKey('8')">8</button>
+                <button class="calc-btn" onclick="pressKey('9')">9</button>
+                <button class="calc-btn operator" onclick="pressKey('+')">+</button>
+                <button class="calc-btn" onclick="pressKey('4')">4</button>
+                <button class="calc-btn" onclick="pressKey('5')">5</button>
+                <button class="calc-btn" onclick="pressKey('6')">6</button>
+                <button class="calc-btn operator" onclick="calculateResult()">=</button>
+                <button class="calc-btn" onclick="pressKey('1')">1</button>
+                <button class="calc-btn" onclick="pressKey('2')">2</button>
+                <button class="calc-btn" onclick="pressKey('3')">3</button>
+                <button class="calc-btn" onclick="pressKey('0')">0</button>
+            </div>
+        </div>
+
+        <!-- Contact Form Box -->
+        <div class="form-box">
+            <h2>Mugh Se Raabta Karein</h2>
+            <form data-netlify="true" name="contact-form">
+                <div class="form-group">
+                    <label>Aap Ka Naam (Name):</label>
+                    <input type="text" name="name" class="form-control" placeholder="Apna naam likhein" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address:</label>
+                    <input type="email" name="email" class="form-control" placeholder="Apna email likhein" required>
+                </div>
+                <div class="form-group">
+                    <label>Aap Ka Paighyam (Message):</label>
+                    <textarea name="message" class="form-control" rows="4" placeholder="Yahan apna message likhein" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Message Bhejein</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- 🧠 JavaScript Section -->
+        <!-- 🧠 JavaScript Section (Fixed & Clean Code) -->
+    <script>
+        // 1. 🧮 Calculator Logic
+        var displayBox = document.getElementById("display");
+        
+        function pressKey(value) {
+            if (displayBox.value === "0" || displayBox.value === "Error") { 
+                displayBox.value = value; 
+            } else { 
+                displayBox.value += value; 
+            }
+        }
+        
+        function clearScreen() { 
+            displayBox.value = ""; 
+        }
+        
+        function calculateResult() {
+            try { 
+                displayBox.value = eval(displayBox.value); 
+            } catch (error) { 
+                displayBox.value = "Error"; 
+            }
+        }
+
+        // 2. ⏱️ Live Clock Logic
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+
+            // 12-hour format conversion
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+
+            // Numbers ke shuru me 0 lagane ke liye (jaise 03:05:09)
+            if (hours < 10) { hours = '0' + hours; }
+            if (minutes < 10) { minutes = '0' + minutes; }
+            if (seconds < 10) { seconds = '0' + seconds; }
+
+            var timeString = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+            
+            // Check karein ke screen par clock ka dabba majood hai ya nahi
+            var clockDisplay = document.getElementById("clock");
+            if (clockDisplay) {
+                clockDisplay.innerText = timeString;
+            }
+        }
+
+        // Har 1 second ke baad clock ko auto-run karne ke liye
+        setInterval(updateClock, 1000);
+        
+        // Page load hote hi clock chalane ke liye
+        window.onload = function() {
+            updateClock();
+        };
+    </script>
