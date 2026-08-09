@@ -12,7 +12,6 @@
     <style>
         body {
             background-color: #f5f6fa;
-            color: #2f3640;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
             padding: 50px 20px;
@@ -22,7 +21,7 @@
             max-width: 500px;
             margin: 0 auto;
         }
-        .card, .form-box, .calc-box, .clock-box, .game-box {
+        .card, .form-box, .calc-box, .clock-box {
             background-color: white;
             padding: 40px;
             border-radius: 15px;
@@ -60,43 +59,6 @@
             min-width: 200px;
         }
 
-        /* ❌⭕ Tic-Tac-Toe Game Styling */
-        .game-box h2 { color: #2f3640; margin-top: 0; }
-        .status-text { font-size: 18px; font-weight: bold; color: #00a8ff; margin-bottom: 15px; }
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-        .cell {
-            height: 80px;
-            background-color: #f1f2f6;
-            border: none;
-            border-radius: 8px;
-            font-size: 32px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .cell:hover { background-color: #dcdde1; }
-        .reset-btn {
-            margin-top: 20px;
-            background-color: #ee5253;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            max-width: 300px;
-            transition: 0.2s;
-        }
-        .reset-btn:hover { background-color: #c8d6e5; color: #2f3640; }
-
         /* 🧮 Calculator Styling */
         .calc-box h2 { color: #2f3640; margin-top: 0; }
         .calc-screen {
@@ -133,14 +95,13 @@
         /* Mobile Responsive */
         @media (max-width: 480px) {
             body { padding: 20px 10px; }
-            .card, .form-box, .calc-box, .clock-box, .game-box { padding: 20px; }
+            .card, .form-box, .calc-box, .clock-box { padding: 20px; }
             h1 { font-size: 24px; }
             p { font-size: 15px; }
             .profile-pic { width: 120px; height: 120px; }
             .submit-btn { font-size: 16px; }
             .calc-btn { padding: 10px; font-size: 16px; }
             .clock-display { font-size: 28px; }
-            .cell { height: 65px; font-size: 24px; }
         }
     </style>
 </head>
@@ -150,9 +111,9 @@
         
         <!-- Profile Card -->
         <div class="card">
-            <img src="my-photo.png" alt="Zain's Photo" class="profile-pic">
+            <img src="my-photo.png" alt="my my-photo.png" class="profile-pic">
             <h1>Mera Dell Gen 11 PC</h1>
-            <p>Main ne apni website me Tic-Tac-Toe Game, Live Digital Clock aur Calculator ko perfectly jor liya hai!</p>
+            <p>Main ne apni website me ek Live Digital Clock bhi add kar li hai!</p>
             
             <!-- Instagram Link -->
             <div class="social-icons">
@@ -168,26 +129,6 @@
         <div class="clock-box">
             <h2>Live Digital Clock</h2>
             <div id="clock" class="clock-display">00:00:00 PM</div>
-        </div>
-
-        <!-- ❌⭕ Tic-Tac-Toe Game Box -->
-        <div class="game-box">
-            <h2>Zain's Tic-Tac-Toe</h2>
-            <div class="status-text" id="gameStatus">Player X ki baari hai</div>
-            
-            <div class="game-grid">
-                <button class="cell" onclick="playTurn(this, 0)"></button>
-                <button class="cell" onclick="playTurn(this, 1)"></button>
-                <button class="cell" onclick="playTurn(this, 2)"></button>
-                <button class="cell" onclick="playTurn(this, 3)"></button>
-                <button class="cell" onclick="playTurn(this, 4)"></button>
-                <button class="cell" onclick="playTurn(this, 5)"></button>
-                <button class="cell" onclick="playTurn(this, 6)"></button>
-                <button class="cell" onclick="playTurn(this, 7)"></button>
-                <button class="cell" onclick="playTurn(this, 8)"></button>
-            </div>
-            
-            <button class="reset-btn" onclick="resetGame()">Game Reset Karein</button>
         </div>
 
         <!-- 🧮 Calculator Box Section -->
@@ -212,3 +153,87 @@
                 <button class="calc-btn" onclick="pressKey('3')">3</button>
                 <button class="calc-btn" onclick="pressKey('0')">0</button>
             </div>
+        </div>
+
+        <!-- Contact Form Box -->
+        <div class="form-box">
+            <h2>Mugh Se Raabta Karein</h2>
+            <form data-netlify="true" name="contact-form">
+                <div class="form-group">
+                    <label>Aap Ka Naam (Name):</label>
+                    <input type="text" name="name" class="form-control" placeholder="Apna naam likhein" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address:</label>
+                    <input type="email" name="email" class="form-control" placeholder="Apna email likhein" required>
+                </div>
+                <div class="form-group">
+                    <label>Aap Ka Paighyam (Message):</label>
+                    <textarea name="message" class="form-control" rows="4" placeholder="Yahan apna message likhein" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Message Bhejein</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- 🧠 JavaScript Section -->
+        <!-- 🧠 JavaScript Section (Fixed & Clean Code) -->
+    <script>
+        // 1. 🧮 Calculator Logic
+        var displayBox = document.getElementById("display");
+        
+        function pressKey(value) {
+            if (displayBox.value === "0" || displayBox.value === "Error") { 
+                displayBox.value = value; 
+            } else { 
+                displayBox.value += value; 
+            }
+        }
+        
+        function clearScreen() { 
+            displayBox.value = ""; 
+        }
+        
+        function calculateResult() {
+            try { 
+                displayBox.value = eval(displayBox.value); 
+            } catch (error) { 
+                displayBox.value = "Error"; 
+            }
+        }
+
+        // 2. ⏱️ Live Clock Logic
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+
+            // 12-hour format conversion
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+
+            // Numbers ke shuru me 0 lagane ke liye (jaise 03:05:09)
+            if (hours < 10) { hours = '0' + hours; }
+            if (minutes < 10) { minutes = '0' + minutes; }
+            if (seconds < 10) { seconds = '0' + seconds; }
+
+            var timeString = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+            
+            // Check karein ke screen par clock ka dabba majood hai ya nahi
+            var clockDisplay = document.getElementById("clock");
+            if (clockDisplay) {
+                clockDisplay.innerText = timeString;
+            }
+        }
+
+        // Har 1 second ke baad clock ko auto-run karne ke liye
+        setInterval(updateClock, 1000);
+        
+        // Page load hote hi clock chalane ke liye
+        window.onload = function() {
+            updateClock();
+        };
+    </script>
