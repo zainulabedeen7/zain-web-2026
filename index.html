@@ -237,3 +237,162 @@
             updateClock();
         };
     </script>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zain's Tic-Tac-Toe Game</title>
+    
+    <style>
+        body {
+            background-color: #f5f6fa;
+            color: #2f3640;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 50px 20px;
+            margin: 0;
+        }
+        .game-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            max-width: 400px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        h2 { color: #2f3640; margin-top: 0; font-size: 28px; }
+        .status-text { font-size: 18px; font-weight: bold; color: #00a8ff; margin-bottom: 15px; }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .cell {
+            height: 90px;
+            background-color: #f1f2f6;
+            border: none;
+            border-radius: 8px;
+            font-size: 36px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .cell:hover { background-color: #dcdde1; }
+        .reset-btn {
+            margin-top: 20px;
+            background-color: #ee5253;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            transition: 0.2s;
+        }
+        .reset-btn:hover { background-color: #353b48; }
+
+        @media (max-width: 480px) {
+            body { padding: 20px 10px; }
+            .game-box { padding: 20px; }
+            .cell { height: 75px; font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-box">
+        <h2>Zain's Tic-Tac-Toe</h2>
+        <div class="status-text" id="gameStatus">Player X ki baari hai</div>
+        
+        <div class="game-grid">
+            <button class="cell" onclick="playTurn(this, 0)"></button>
+            <button class="cell" onclick="playTurn(this, 1)"></button>
+            <button class="cell" onclick="playTurn(this, 2)"></button>
+            <button class="cell" onclick="playTurn(this, 3)"></button>
+            <button class="cell" onclick="playTurn(this, 4)"></button>
+            <button class="cell" onclick="playTurn(this, 5)"></button>
+            <button class="cell" onclick="playTurn(this, 6)"></button>
+            <button class="cell" onclick="playTurn(this, 7)"></button>
+            <button class="cell" onclick="playTurn(this, 8)"></button>
+        </div>
+        
+        <button class="reset-btn" onclick="resetGame()">Game Reset Karein</button>
+    </div>
+
+    <script>
+        var currentPlayer = "X";
+        var gameState = ["", "", "", "", "", "", "", "", ""];
+        var isGameActive = true;
+        var statusDisplay = document.getElementById("gameStatus");
+
+        // Winning rules matrix
+        var winningConditions = [, [3, 4, 5], [6, 7, 8], // Rows, [1, 4, 7], [2, 5, 8], // Columns, [2, 4, 6]             // Diagonals
+        ];
+
+        window.playTurn = function(clickedCell, index) {
+            if (gameState[index] !== "" || !isGameActive) return;
+
+            gameState[index] = currentPlayer;
+            clickedCell.innerText = currentPlayer;
+            clickedCell.style.color = currentPlayer === "X" ? "#2f3640" : "#ff9f43";
+
+            checkResult();
+        };
+
+        function checkResult() {
+            var roundWon = false;
+            for (var i = 0; i < winningConditions.length; i++) {
+                var condition = winningConditions[i];
+                var a = gameState[condition[0]];
+                var b = gameState[condition[1]];
+                var c = gameState[condition[2]];
+                
+                if (a === "" || b === "" || c === "") continue;
+                if (a === b && b === c) {
+                    roundWon = true;
+                    break;
+                }
+            }
+
+            if (roundWon) {
+                statusDisplay.innerText = "Mubarak ho! Player " + currentPlayer + " jeet gaya! 🎉";
+                statusDisplay.style.color = "#4cd137";
+                isGameActive = false;
+                return;
+            }
+
+            var roundDraw = !gameState.includes("");
+            if (roundDraw) {
+                statusDisplay.innerText = "Match Draw ho gaya! 🤝";
+                statusDisplay.style.color = "#ff9f43";
+                isGameActive = false;
+                return;
+            }
+
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            statusDisplay.innerText = "Player " + currentPlayer + " ki baari hai";
+        }
+
+        window.resetGame = function() {
+            currentPlayer = "X";
+            gameState = ["", "", "", "", "", "", "", "", ""];
+            isGameActive = true;
+            statusDisplay.innerText = "Player X ki baari hai";
+            statusDisplay.style.color = "#00a8ff";
+            var cells = document.getElementsByClassName("cell");
+            for (var i = 0; i < cells.length; i++) {
+                cells[i].innerText = "";
+            }
+        };
+    </script>
+
+</body>
+</html>
+
