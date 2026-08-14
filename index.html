@@ -1314,7 +1314,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text to PDF Converter</title>
+    <title>Advanced Text to PDF Converter</title>
+    <!-- Icons pack for layout buttons -->
+    <link rel="stylesheet" href="https://cloudflare.com">
     <style>
         * {
             margin: 0;
@@ -1362,12 +1364,34 @@
             flex-direction: column;
             gap: 8px;
             margin-bottom: 20px;
+            position: relative;
         }
 
         label {
             font-size: 14px;
             font-weight: 600;
             color: #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Fast Paste Shortcut Button Style */
+        .paste-btn {
+            background-color: #334155;
+            color: #38bdf8;
+            border: 1px solid #475569;
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .paste-btn:hover {
+            background-color: #38bdf8;
+            color: #0f172a;
         }
 
         input[type="text"] {
@@ -1383,7 +1407,7 @@
 
         textarea {
             width: 100%;
-            height: 200px;
+            height: 220px;
             background-color: #0f172a;
             border: 1px solid #475569;
             color: #f8fafc;
@@ -1397,6 +1421,16 @@
 
         input:focus, textarea:focus {
             border-color: #38bdf8;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: -15px;
+            margin-bottom: 20px;
+            padding: 0 5px;
         }
 
         .download-btn {
@@ -1424,13 +1458,13 @@
             transform: scale(0.98);
         }
 
-        /* --- PRINT STYLES (PDF Design Configuration) --- */
+        /* --- PRINT STYLES FOR EXCELLENT PDF OUTPUT --- */
         @media print {
             body * {
-                visibility: hidden; /* Pehle poori web screen hide karein */
+                visibility: hidden;
             }
             .print-area, .print-area * {
-                visibility: visible; /* Sirf targeted content area show karein */
+                visibility: visible;
             }
             .print-area {
                 position: absolute;
@@ -1442,16 +1476,17 @@
                 padding: 40px;
             }
             .print-title {
-                font-size: 28px;
+                font-size: 26px;
                 font-weight: bold;
                 border-bottom: 2px solid #333;
                 padding-bottom: 10px;
-                margin-bottom: 20px;
+                margin-bottom: 25px;
             }
             .print-content {
-                font-size: 16px;
-                white-space: pre-wrap; /* Paragraph spaces barkarar rakhne ke liye */
+                font-size: 15px;
+                white-space: pre-wrap;
                 line-height: 1.6;
+                text-align: justify;
             }
         }
     </style>
@@ -1460,25 +1495,34 @@
 
     <div class="pdf-container">
         <h2>📄 Text to PDF Converter</h2>
-        <p class="subtitle">Apna assignment ya notes likhein aur direct PDF download karein</p>
+        <p class="subtitle">Kahi se bhi text copy karein aur yahan paste karke safe PDF download karein</p>
 
-        <!-- Document Title Input -->
+        <!-- Document Heading -->
         <div class="input-group">
-            <label for="docTitle">Document Title / Heading:</label>
-            <input type="text" id="docTitle" placeholder="e.g., My Project Notes, Assignment 1">
+            <label for="docTitle">Document Title / File Name:</label>
+            <input type="text" id="docTitle" placeholder="e.g., Copied Book Notes, Article Summary">
         </div>
 
-        <!-- Document Body Input -->
+        <!-- Document Content Body with Smart Paste Button -->
         <div class="input-group">
-            <label for="docContent">Document Content (Text):</label>
-            <textarea id="docContent" placeholder="Yahan apna lamba text ya details likhein..."></textarea>
+            <label for="docContent">
+                Document Content (Paste Text Below):
+                <button class="paste-btn" id="smartPasteBtn"><i class="fa-regular fa-clipboard"></i> Smart Paste</button>
+            </label>
+            <textarea id="docContent" placeholder="Apna copied text yahan paste karein..."></textarea>
         </div>
 
-        <!-- Download Action Button -->
-        <button class="download-btn" id="generatePdfBtn">📥 Save & Download PDF</button>
+        <!-- Real-time dynamic word metrics -->
+        <div class="meta-info">
+            <span id="charCount">Characters: 0</span>
+            <span id="wordCount">Words: 0</span>
+        </div>
+
+        <!-- Download Action Trigger -->
+        <button class="download-btn" id="generatePdfBtn"><i class="fa-solid fa-file-pdf"></i> Save & Download PDF</button>
     </div>
 
-    <!-- Hiden dynamic area jo print command active hone par PDF banegi -->
+    <!-- Hidden Output Engine -->
     <div id="hiddenPrintArea" class="print-area" style="display: none;">
         <div class="print-title" id="pdfHeader"></div>
         <div class="print-content" id="pdfBody"></div>
@@ -1487,38 +1531,62 @@
     <script>
         const docTitle = document.getElementById('docTitle');
         const docContent = document.getElementById('docContent');
+        const smartPasteBtn = document.getElementById('smartPasteBtn');
         const generatePdfBtn = document.getElementById('generatePdfBtn');
         
+        const charCount = document.getElementById('charCount');
+        const wordCount = document.getElementById('wordCount');
+
         const hiddenPrintArea = document.getElementById('hiddenPrintArea');
         const pdfHeader = document.getElementById('pdfHeader');
         const pdfBody = document.getElementById('pdfBody');
 
+        // 1. Smart Clipboards Access API Integration
+        smartPasteBtn.addEventListener('click', async () => {
+            try {
+                // Browser se runtime storage permissions mangna text read karne ke liye
+                const text = await navigator.clipboard.readText();
+                docContent.value = text;
+                updateMetrics(); // UI counter updates
+            } catch (err) {
+                // System validation fallback screen (Agar browser control secure link blocker active ho)
+                alert("Security block: Aap normal keyboard shortcut (Ctrl + V) use karke bhi text paste kar sakte hain!");
+            }
+        });
+
+        // 2. Metrics Tracking Calculator (Words and characters tracking logic)
+        function updateMetrics() {
+            const text = docContent.value;
+            charCount.textContent = `Characters: ${text.length}`;
+            
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+            wordCount.textContent = `Words: ${words.length}`;
+        }
+
+        docContent.addEventListener('input', updateMetrics);
+
+        // 3. Document Printer Core Driver
         generatePdfBtn.addEventListener('click', () => {
             const titleValue = docTitle.value.trim();
             const contentValue = docContent.value.trim();
 
             if (!contentValue) {
-                alert("Please enter some content before generating the PDF!");
+                alert("Pehle content paste ya type karein tabhi PDF banegi!");
                 return;
             }
 
-            // Fallback text agar user heading khali chor de
-            const finalTitle = titleValue ? titleValue : "Untitled Document";
+            const finalTitle = titleValue ? titleValue : "Pasted_Document_Notes";
 
-            // Print template mein data injection
             pdfHeader.textContent = finalTitle;
             pdfBody.textContent = contentValue;
 
-            // System download popup browser layout trigger
             hiddenPrintArea.style.display = 'block';
             
-            // Tab ka temporary name change karna taqe file name bhi automatic title wala save ho
             const originalTitle = document.title;
             document.title = finalTitle;
 
             window.print();
 
-            // Printing dialog band hone ke baad reset settings
             document.title = originalTitle;
             hiddenPrintArea.style.display = 'none';
         });
