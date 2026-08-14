@@ -1309,5 +1309,221 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to PDF Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .pdf-container {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 650px;
+        }
+
+        h2 {
+            color: #38bdf8;
+            margin-bottom: 8px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background-color: #0f172a;
+            border: 1px solid #475569;
+            color: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            background-color: #0f172a;
+            border: 1px solid #475569;
+            color: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            resize: none;
+            outline: none;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #38bdf8;
+        }
+
+        .download-btn {
+            width: 100%;
+            background-color: #38bdf8;
+            color: #0f172a;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .download-btn:hover {
+            background-color: #0ea5e9;
+        }
+
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* --- PRINT STYLES (PDF Design Configuration) --- */
+        @media print {
+            body * {
+                visibility: hidden; /* Pehle poori web screen hide karein */
+            }
+            .print-area, .print-area * {
+                visibility: visible; /* Sirf targeted content area show karein */
+            }
+            .print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                color: #000000 !important;
+                background: #ffffff !important;
+                padding: 40px;
+            }
+            .print-title {
+                font-size: 28px;
+                font-weight: bold;
+                border-bottom: 2px solid #333;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+            .print-content {
+                font-size: 16px;
+                white-space: pre-wrap; /* Paragraph spaces barkarar rakhne ke liye */
+                line-height: 1.6;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pdf-container">
+        <h2>📄 Text to PDF Converter</h2>
+        <p class="subtitle">Apna assignment ya notes likhein aur direct PDF download karein</p>
+
+        <!-- Document Title Input -->
+        <div class="input-group">
+            <label for="docTitle">Document Title / Heading:</label>
+            <input type="text" id="docTitle" placeholder="e.g., My Project Notes, Assignment 1">
+        </div>
+
+        <!-- Document Body Input -->
+        <div class="input-group">
+            <label for="docContent">Document Content (Text):</label>
+            <textarea id="docContent" placeholder="Yahan apna lamba text ya details likhein..."></textarea>
+        </div>
+
+        <!-- Download Action Button -->
+        <button class="download-btn" id="generatePdfBtn">📥 Save & Download PDF</button>
+    </div>
+
+    <!-- Hiden dynamic area jo print command active hone par PDF banegi -->
+    <div id="hiddenPrintArea" class="print-area" style="display: none;">
+        <div class="print-title" id="pdfHeader"></div>
+        <div class="print-content" id="pdfBody"></div>
+    </div>
+
+    <script>
+        const docTitle = document.getElementById('docTitle');
+        const docContent = document.getElementById('docContent');
+        const generatePdfBtn = document.getElementById('generatePdfBtn');
+        
+        const hiddenPrintArea = document.getElementById('hiddenPrintArea');
+        const pdfHeader = document.getElementById('pdfHeader');
+        const pdfBody = document.getElementById('pdfBody');
+
+        generatePdfBtn.addEventListener('click', () => {
+            const titleValue = docTitle.value.trim();
+            const contentValue = docContent.value.trim();
+
+            if (!contentValue) {
+                alert("Please enter some content before generating the PDF!");
+                return;
+            }
+
+            // Fallback text agar user heading khali chor de
+            const finalTitle = titleValue ? titleValue : "Untitled Document";
+
+            // Print template mein data injection
+            pdfHeader.textContent = finalTitle;
+            pdfBody.textContent = contentValue;
+
+            // System download popup browser layout trigger
+            hiddenPrintArea.style.display = 'block';
+            
+            // Tab ka temporary name change karna taqe file name bhi automatic title wala save ho
+            const originalTitle = document.title;
+            document.title = finalTitle;
+
+            window.print();
+
+            // Printing dialog band hone ke baad reset settings
+            document.title = originalTitle;
+            hiddenPrintArea.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
 
 
